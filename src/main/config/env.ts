@@ -15,9 +15,14 @@ export const env = {
   appEmail: process.env.APP_EMAIL as string,
 
   // AWS
-  awsRegion: process.env.AWS_REGION as string,
-  awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-  awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+  aws: {
+    region: process.env.AWS_REGION as string,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+  },
+
+  // Email
+  emailFrom: process.env.EMAIL_FROM as string,
 
   // Origins
   originsAllowed: process.env.ORIGINS_ALLOWED as string,

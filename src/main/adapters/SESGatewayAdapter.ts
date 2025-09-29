@@ -7,15 +7,15 @@ import { env } from '../config/env';
 export class SESGatewayAdapter implements IEmailGateway {
   async sendEmail({ from, to, subject, html }: SendEmailParams): Promise<void> {
     const sesClient = new SESClient({
-      region: env.awsRegion,
+      region: env.aws.region,
       credentials: {
-        accessKeyId: env.awsAccessKeyId,
-        secretAccessKey: env.awsSecretAccessKey,
+        accessKeyId: env.aws.accessKeyId,
+        secretAccessKey: env.aws.secretAccessKey,
       },
     });
 
     const sendEmailCommand = new SendEmailCommand({
-      Source: from,
+      Source: from || env.emailFrom,
       Destination: {
         ToAddresses: to,
       },

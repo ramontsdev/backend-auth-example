@@ -1,5 +1,5 @@
 export type SendEmailParams = {
-  from: string;
+  from?: string;
   to: string[];
   subject: string;
   html: string;
