@@ -1,6 +1,9 @@
 import { IHasher } from '@/domain/cryptography/hasher';
 import { ICreateUser } from '@/domain/usecases/user/CreateUser';
+import { IFindUserByDocument } from '@/domain/usecases/user/FindUserByDocument';
+import { IFindUserByEmail } from '@/domain/usecases/user/FindUserByEmail';
 import { ICreateVerificationCode } from '@/domain/usecases/verificationCode/CreateVerificationCode';
+import { env } from '@/main/config/env';
 import { buildWelcomeEmailTemplate } from '@/presentation/helpers/emailTemplates/welcomeEmailTemplate';
 import { badRequest, ok } from '@/presentation/helpers/httpHelpers';
 import { IController } from '@/presentation/protocols/controller';
@@ -10,6 +13,8 @@ import { signUpSchema } from '@/presentation/validations/authentication/signUpSc
 
 export class SignUpController implements IController {
   constructor(
+    private readonly findUserByDocument: IFindUserByDocument,
+    private readonly findUserByEmail: IFindUserByEmail,
     private readonly createUser: ICreateUser,
     private readonly createVerificationCode: ICreateVerificationCode,
     private readonly hasher: IHasher,
@@ -28,6 +33,18 @@ export class SignUpController implements IController {
 
     const { name, email, password, document } = data;
 
+    const userByDocument = await this.findUserByDocument.findByDocument(document);
+
+    if (userByDocument) {
+      return badRequest([{ field: 'document', message: 'User already exists' }]);
+    }
+
+    const userByEmail = await this.findUserByEmail.findByEmail(email);
+
+    if (userByEmail) {
+      return badRequest([{ field: 'email', message: 'User already exists' }]);
+    }
+
     const hashedPassword = await this.hasher.hash(password);
 
     const user = await this.createUser.create({ name, email, password: hashedPassword, document });
@@ -38,9 +55,9 @@ export class SignUpController implements IController {
     });
 
     await this.emailGateway.sendEmail({
-      from: `${process.env.APP_NAME}<${process.env.APP_EMAIL}>`,
+      from: `${env.appName}<${env.appEmail}>`,
       to: [email],
-      subject: `Bem-vindo ao ${process.env.APP_NAME}! 🎉`,
+      subject: `Bem-vindo ao ${env.appName}! 🎉`,
       html: buildWelcomeEmailTemplate({
         name,
         verificationCode: verificationCode.code,
