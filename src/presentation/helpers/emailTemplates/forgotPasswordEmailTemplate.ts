@@ -13,7 +13,7 @@ export function buildForgotPasswordEmailTemplate({ verificationCode }: IForgotPa
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Recuperação de Senha - ${env.appName}</title>
+      <title>Recuperação de Senha - ${env.app.name}</title>
     </head>
     <body style="margin: 0; padding: 0; background-color: ${emailColors.danger['50']}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
       <div style="max-width: 600px; margin: 0 auto; background-color: ${emailColors.white}; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
@@ -35,7 +35,7 @@ export function buildForgotPasswordEmailTemplate({ verificationCode }: IForgotPa
           </h2>
 
           <p style="color: ${emailColors.danger['800']}; line-height: 1.6; margin: 0 0 25px 0; font-size: 16px;">
-            Recebemos uma solicitação para redefinir a senha da sua conta no <strong>${env.appName}</strong>. Use o código abaixo para criar uma nova senha.
+            Recebemos uma solicitação para redefinir a senha da sua conta no <strong>${env.app.name}</strong>. Use o código abaixo para criar uma nova senha.
           </p>
 
           <!-- Verification Code Box -->
@@ -66,7 +66,7 @@ export function buildForgotPasswordEmailTemplate({ verificationCode }: IForgotPa
           </p>
           <div style="margin-top: 20px;">
             <p style="color: #a0aec0; margin: 0; font-size: 12px;">
-              © 2024 ${env.appName}. Todos os direitos reservados.
+              © 2024 ${env.app.name}. Todos os direitos reservados.
             </p>
           </div>
         </div>

@@ -10,9 +10,11 @@ export const env = {
   jwtSecret: process.env.JWT_SECRET as string,
 
   // App
-  appName: process.env.APP_NAME as string,
-  appDomain: process.env.APP_DOMAIN as string,
-  appEmail: process.env.APP_EMAIL as string,
+  app: {
+    name: process.env.APP_NAME as string,
+    domain: process.env.APP_DOMAIN as string,
+    email: process.env.APP_EMAIL as string,
+  },
 
   // AWS
   aws: {
@@ -25,5 +27,5 @@ export const env = {
   emailFrom: process.env.EMAIL_FROM as string,
 
   // Origins
-  originsAllowed: process.env.ORIGINS_ALLOWED as string,
+  allowOrigins: process.env.ALLOW_ORIGINS as string,
 };

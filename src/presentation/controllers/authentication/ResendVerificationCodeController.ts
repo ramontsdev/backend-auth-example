@@ -50,7 +50,7 @@ export class ResendVerificationCodeController implements IController {
     const newVerificationCode = await this.createVerificationCode.create({ email, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) });
 
     await this.emailGateway.sendEmail({
-      from: `${env.appName}<${env.appEmail}>`,
+      from: `${env.app.name}<${env.app.email}>`,
       to: [email],
       subject: 'Código de verificação',
       html: buildResendVerificationCodeEmailTemplate({ verificationCode: newVerificationCode.code }),

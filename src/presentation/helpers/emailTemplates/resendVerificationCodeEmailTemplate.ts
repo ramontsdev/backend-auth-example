@@ -11,7 +11,7 @@ export function buildResendVerificationCodeEmailTemplate({ verificationCode }: I
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Código de Verificação - ${env.appName}</title>
+      <title>Código de Verificação - ${env.app.name}</title>
     </head>
     <body style="margin: 0; padding: 0; background-color: #f4f7fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
@@ -33,7 +33,7 @@ export function buildResendVerificationCodeEmailTemplate({ verificationCode }: I
           </h2>
 
           <p style="color: #4a5568; line-height: 1.6; margin: 0 0 25px 0; font-size: 16px;">
-            Aqui está o novo código de verificação para ativar sua conta no <strong>${env.appName}</strong>. Use-o para confirmar seu email.
+            Aqui está o novo código de verificação para ativar sua conta no <strong>${env.app.name}</strong>. Use-o para confirmar seu email.
           </p>
 
           <!-- Verification Code Box -->
@@ -50,7 +50,7 @@ export function buildResendVerificationCodeEmailTemplate({ verificationCode }: I
           </div>
 
           <p style="color: #4a5568; line-height: 1.6; margin: 25px 0 0 0; font-size: 16px;">
-            Após verificar seu email, você terá acesso completo a todas as funcionalidades do ${env.appName}! 🚀
+            Após verificar seu email, você terá acesso completo a todas as funcionalidades do ${env.app.name}! 🚀
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export function buildResendVerificationCodeEmailTemplate({ verificationCode }: I
           </p>
           <div style="margin-top: 20px;">
             <p style="color: #a0aec0; margin: 0; font-size: 12px;">
-              © 2024 ${env.appName}. Todos os direitos reservados.
+              © 2024 ${env.app.name}. Todos os direitos reservados.
             </p>
           </div>
         </div>
