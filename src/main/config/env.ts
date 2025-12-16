@@ -27,5 +27,5 @@ export const env = {
   emailFrom: process.env.EMAIL_FROM as string,
 
   // Origins
-  allowOrigins: process.env.ALLOW_ORIGINS as string,
+  allowedOrigins: process.env.ALLOWED_ORIGINS as string,
 };

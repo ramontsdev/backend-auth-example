@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { env } from '@/main/config/env';
 
 export function expressCors(request: Request, response: Response, next: NextFunction) {
-  const allowedOrigins = env.allowOrigins.split(',');
+  const allowedOrigins = env.allowedOrigins.split(',');
 
   const origin = request.header('origin');
   const isAllowed = allowedOrigins.includes(origin!);
