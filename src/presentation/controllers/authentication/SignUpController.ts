@@ -55,9 +55,9 @@ export class SignUpController implements IController {
     });
 
     await this.emailGateway.sendEmail({
-      from: `${env.appName}<${env.appEmail}>`,
+      from: `${env.app.name}<${env.app.email}>`,
       to: [email],
-      subject: `Bem-vindo ao ${env.appName}! 🎉`,
+      subject: `Bem-vindo ao ${env.app.name}! 🎉`,
       html: buildWelcomeEmailTemplate({
         name,
         verificationCode: verificationCode.code,
