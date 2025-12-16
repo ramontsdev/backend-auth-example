@@ -7,7 +7,8 @@ import { UserModel } from '@/domain/models/userModel';
 import { UpdatePasswordDTO } from '@/domain/usecases/authentication/UpdatePassword';
 import { CreateUserDTO } from '@/domain/usecases/user/CreateUser';
 import { UpdateUserDto } from '@/domain/usecases/user/UpdateUser';
-import { PrismaClient } from '@/main/db/prisma/generated';
+
+import { PrismaClient } from './prismaClient';
 
 export class UserPrismaRepository implements
   IFindUserByEmailRepository,

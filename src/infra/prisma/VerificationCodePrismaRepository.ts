@@ -4,7 +4,8 @@ import { IFindVerificationCodeByEmailRepository } from '@/data/protocols/reposit
 import { IFindVerificationCodeRepository } from '@/data/protocols/repositories/verificationCode/FindVerificationCodeRepository';
 import { VerificationCodeModel } from '@/domain/models/verificationCodeModel';
 import { VerificationCodeParams } from '@/domain/usecases/verificationCode/FindVerificationCode';
-import { PrismaClient } from '@/main/db/prisma/generated';
+
+import { PrismaClient } from './prismaClient';
 
 export class VerificationCodePrismaRepository implements
   ICreateVerificationCodeRepository,
