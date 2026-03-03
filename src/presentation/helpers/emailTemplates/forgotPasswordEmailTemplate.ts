@@ -47,7 +47,7 @@ export function buildForgotPasswordEmailTemplate({ verificationCode }: IForgotPa
               ${verificationCode}
             </div>
             <p style="color: ${emailColors.danger['600']}; margin: 15px 0 0 0; font-size: 14px;">
-              Este código expira em 24 horas
+              Este código expira em 15 minutos
             </p>
           </div>
 

@@ -45,7 +45,7 @@ export function buildResendVerificationCodeEmailTemplate({ verificationCode }: I
               ${verificationCode}
             </div>
             <p style="color: #718096; margin: 15px 0 0 0; font-size: 14px;">
-              Este código expira em 24 horas
+              Este código expira em 30 minutos
             </p>
           </div>
 

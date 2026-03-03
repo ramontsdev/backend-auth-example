@@ -48,7 +48,7 @@ export function buildWelcomeEmailTemplate({ name, verificationCode }: IWelcomeEm
               ${verificationCode}
             </div>
             <p style="color: ${emailColors.primary['600']}; margin: 15px 0 0 0; font-size: 14px;">
-              Este código expira em 15 dias
+              Este código expira em 30 minutos
             </p>
           </div>
 
