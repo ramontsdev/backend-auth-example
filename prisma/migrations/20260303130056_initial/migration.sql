@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "VerificationCodeType" AS ENUM ('EMAIL_VERIFICATION', 'PASSWORD_RESET');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -18,6 +21,7 @@ CREATE TABLE "verification_codes" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "code" TEXT NOT NULL,
+    "type" "VerificationCodeType" NOT NULL,
     "expires_at" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -35,13 +39,10 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "verification_codes_code_key" ON "verification_codes"("code");
 
 -- CreateIndex
-CREATE INDEX "verification_codes_expires_at_idx" ON "verification_codes"("expires_at");
+CREATE INDEX "verification_codes_email_type_expires_at_idx" ON "verification_codes"("email", "type", "expires_at");
 
 -- CreateIndex
-CREATE INDEX "verification_codes_email_expires_at_idx" ON "verification_codes"("email", "expires_at");
-
--- CreateIndex
-CREATE UNIQUE INDEX "verification_codes_email_code_key" ON "verification_codes"("email", "code");
+CREATE UNIQUE INDEX "verification_codes_email_code_type_key" ON "verification_codes"("email", "code", "type");
 
 -- AddForeignKey
 ALTER TABLE "verification_codes" ADD CONSTRAINT "verification_codes_email_fkey" FOREIGN KEY ("email") REFERENCES "users"("email") ON DELETE CASCADE ON UPDATE CASCADE;
