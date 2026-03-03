@@ -12,13 +12,13 @@ export class MeController implements IController {
     const { account } = httpRequest;
 
     if (!account) {
-      return unauthorized({ error: 'Access denied!' });
+      return unauthorized({ error: 'Acesso negado' });
     }
 
     const user = await this.findUserById.findById(account.userId);
 
     if (!user) {
-      return unauthorized({ error: 'User not found!' });
+      return unauthorized({ error: 'Usuário não encontrado' });
     }
 
     const { password: _, ...userWithoutPassword } = user;

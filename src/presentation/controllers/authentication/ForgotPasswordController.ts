@@ -2,6 +2,7 @@ import { IFindUserByEmail } from '@/domain/usecases/user/FindUserByEmail';
 import { ICreateVerificationCode } from '@/domain/usecases/verificationCode/CreateVerificationCode';
 import { IDeleteVerificationCode } from '@/domain/usecases/verificationCode/DeleteVerificationCode';
 import { IFindVerificationCodeByEmail } from '@/domain/usecases/verificationCode/FindVerificationCodeByEmail';
+import { authConfig } from '@/main/config/authConfig';
 import { env } from '@/main/config/env';
 import { buildForgotPasswordEmailTemplate } from '@/presentation/helpers/emailTemplates/forgotPasswordEmailTemplate';
 import { badRequest, noContent } from '@/presentation/helpers/httpHelpers';
@@ -25,7 +26,7 @@ export class ForgotPasswordController implements IController {
     if (!success) {
       return badRequest(error.issues.map(issue => ({
         field: issue.path.join('.'),
-        message: issue.message,
+        error: issue.message,
       })));
     }
 
@@ -34,16 +35,27 @@ export class ForgotPasswordController implements IController {
     const user = await this.findUserByEmail.findByEmail(email);
 
     if (!user) {
-      return badRequest([{ field: 'email', message: 'E-mail not found' }]);
+      return badRequest({ error: 'E-mail não encontrado' });
     }
 
-    const existingVerificationCode = await this.findVerificationCodeByEmail.findByEmail(email);
+    const existingVerificationCode = await this.findVerificationCodeByEmail.findByEmail({
+      email,
+      type: 'PASSWORD_RESET',
+    });
 
     if (existingVerificationCode) {
-      await this.deleteVerificationCode.delete({ email, code: existingVerificationCode.code });
+      await this.deleteVerificationCode.delete({
+        email,
+        code: existingVerificationCode.code,
+        type: 'PASSWORD_RESET',
+      });
     }
 
-    const newVerificationCode = await this.createVerificationCode.create({ email, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) });
+    const newVerificationCode = await this.createVerificationCode.create({
+      email,
+      expiresAt: new Date(Date.now() + authConfig.passwordResetCodeExpiresInMs),
+      type: 'PASSWORD_RESET',
+    });
 
     await this.emailGateway.sendEmail({
       from: `${env.app.name}<${env.app.email}>`,

@@ -3,6 +3,7 @@ import { ICreateUser } from '@/domain/usecases/user/CreateUser';
 import { IFindUserByDocument } from '@/domain/usecases/user/FindUserByDocument';
 import { IFindUserByEmail } from '@/domain/usecases/user/FindUserByEmail';
 import { ICreateVerificationCode } from '@/domain/usecases/verificationCode/CreateVerificationCode';
+import { authConfig } from '@/main/config/authConfig';
 import { env } from '@/main/config/env';
 import { buildWelcomeEmailTemplate } from '@/presentation/helpers/emailTemplates/welcomeEmailTemplate';
 import { badRequest, ok } from '@/presentation/helpers/httpHelpers';
@@ -27,7 +28,7 @@ export class SignUpController implements IController {
     if (!success) {
       return badRequest(error.issues.map(issue => ({
         field: issue.path.join('.'),
-        message: issue.message,
+        error: issue.message,
       })));
     }
 
@@ -36,13 +37,13 @@ export class SignUpController implements IController {
     const userByDocument = await this.findUserByDocument.findByDocument(document);
 
     if (userByDocument) {
-      return badRequest([{ field: 'document', message: 'User already exists' }]);
+      return badRequest({ error: 'Usuário já existe para este documento' });
     }
 
     const userByEmail = await this.findUserByEmail.findByEmail(email);
 
     if (userByEmail) {
-      return badRequest([{ field: 'email', message: 'User already exists' }]);
+      return badRequest({ error: 'Usuário já existe para este e-mail' });
     }
 
     const hashedPassword = await this.hasher.hash(password);
@@ -51,7 +52,8 @@ export class SignUpController implements IController {
 
     const verificationCode = await this.createVerificationCode.create({
       email,
-      expiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
+      expiresAt: new Date(Date.now() + authConfig.emailVerificationCodeExpiresInMs),
+      type: 'EMAIL_VERIFICATION',
     });
 
     await this.emailGateway.sendEmail({

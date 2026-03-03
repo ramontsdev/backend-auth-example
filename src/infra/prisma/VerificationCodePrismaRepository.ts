@@ -3,6 +3,7 @@ import { IDeleteVerificationCodeRepository } from '@/data/protocols/repositories
 import { IFindVerificationCodeByEmailRepository } from '@/data/protocols/repositories/verificationCode/FindVerificationCodeByEmailRepository';
 import { IFindVerificationCodeRepository } from '@/data/protocols/repositories/verificationCode/FindVerificationCodeRepository';
 import { VerificationCodeModel } from '@/domain/models/verificationCodeModel';
+import { VerificationCodeType } from '@/domain/usecases/verificationCode/CreateVerificationCode';
 import { VerificationCodeParams } from '@/domain/usecases/verificationCode/FindVerificationCode';
 
 import { PrismaClient } from './prismaClient';
@@ -20,6 +21,7 @@ export class VerificationCodePrismaRepository implements
       data: {
         email: params.email,
         code: params.code,
+        type: params.type,
         expiresAt: params.expiresAt,
       },
     });
@@ -32,15 +34,16 @@ export class VerificationCodePrismaRepository implements
       where: {
         email: params.email,
         code: params.code,
+        type: params.type,
       },
     });
 
     return verificationCode;
   }
 
-  async findCodeByEmail(email: string): Promise<VerificationCodeModel | null> {
+  async findCodeByEmail(email: string, type: VerificationCodeType): Promise<VerificationCodeModel | null> {
     const verificationCode = await this.prismaClient.verificationCode.findFirst({
-      where: { email },
+      where: { email, type },
     });
 
     return verificationCode;
@@ -51,6 +54,7 @@ export class VerificationCodePrismaRepository implements
       where: {
         email: params.email,
         code: params.code,
+        type: params.type,
       },
     });
   }

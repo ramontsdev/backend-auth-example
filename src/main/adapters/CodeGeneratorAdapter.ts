@@ -1,13 +1,11 @@
+import crypto from 'node:crypto';
+
 import { ICodeGenerator } from '@/data/protocols/CodeGenerator';
 
 export class CodeGeneratorAdapter implements ICodeGenerator {
   async generate(_value?: string): Promise<string> {
-    const promise = new Promise<string>((resolve) => {
-      resolve(Math.floor(100000 + Math.random() * 900000).toString());
-    });
+    const code = crypto.randomInt(100000, 1000000);
 
-    const code = await promise;
-
-    return code;
+    return code.toString();
   }
 }

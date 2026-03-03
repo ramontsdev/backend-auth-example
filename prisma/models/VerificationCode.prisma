@@ -1,7 +1,14 @@
+enum VerificationCodeType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 model VerificationCode {
   id    String @id @default(uuid())
   email String
   code  String @unique
+
+  type VerificationCodeType
 
   expiresAt DateTime @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
@@ -9,8 +16,7 @@ model VerificationCode {
 
   user User @relation(fields: [email], references: [email], onDelete: Cascade)
 
-  @@unique([email, code])
-  @@index([expiresAt])
-  @@index([email, expiresAt])
+  @@unique([email, code, type])
+  @@index([email, type, expiresAt])
   @@map("verification_codes")
 }

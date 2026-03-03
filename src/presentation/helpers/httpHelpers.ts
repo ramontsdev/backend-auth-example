@@ -1,9 +1,9 @@
 import { HttpResponse } from '../protocols/http';
 
-export function serverError(data?: any): HttpResponse {
+export function serverError(message = 'Erro interno do servidor'): HttpResponse {
   return {
     statusCode: 500,
-    body: data ?? { error: 'Internal server error.' },
+    body: { error: message },
   };
 }
 

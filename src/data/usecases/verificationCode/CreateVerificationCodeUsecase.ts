@@ -16,6 +16,7 @@ export class CreateVerificationCodeUsecase implements ICreateVerificationCode {
       email: params.email,
       code,
       expiresAt: params.expiresAt,
+      type: params.type,
     });
   }
 }

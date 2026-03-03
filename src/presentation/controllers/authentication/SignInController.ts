@@ -28,13 +28,17 @@ export class SignInController implements IController {
     const user = await this.findUserByEmailRepository.findByEmail(email);
 
     if (!user) {
-      return unauthorized({ message: 'Credentials are incorrect' });
+      return unauthorized({ error: 'Credenciais inválidas' });
+    }
+
+    if (!user.isEmailVerified) {
+      return unauthorized({ error: 'E-mail não verificado' });
     }
 
     const isValid = await this.hashComparer.compare(password, user.password);
 
     if (!isValid) {
-      return unauthorized({ message: 'Credentials are incorrect' });
+      return unauthorized({ error: 'Credenciais inválidas' });
     }
 
     const accessToken = await this.encrypter.encrypt({

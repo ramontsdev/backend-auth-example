@@ -23,7 +23,7 @@ export class ResetPasswordController implements IController {
     if (!success) {
       return badRequest(error.issues.map(issue => ({
         field: issue.path.join('.'),
-        message: issue.message,
+        error: issue.message,
       })));
     }
 
@@ -32,22 +32,34 @@ export class ResetPasswordController implements IController {
     const user = await this.findUserByEmail.findByEmail(email);
 
     if (!user) {
-      return badRequest([{ field: 'email', message: 'E-mail not found' }]);
+      return badRequest({ error: 'E-mail não encontrado' });
     }
 
-    const verificationCode = await this.findVerificationCode.find({ email, code });
+    const verificationCode = await this.findVerificationCode.find({
+      email,
+      code,
+      type: 'PASSWORD_RESET',
+    });
 
     if (!verificationCode) {
-      return badRequest([{ field: 'code', message: 'Invalid code' }]);
+      return badRequest({ error: 'Código inválido' });
     }
 
     if (verificationCode.expiresAt < new Date()) {
-      await this.deleteVerificationCode.delete({ email, code });
+      await this.deleteVerificationCode.delete({
+        email,
+        code,
+        type: 'PASSWORD_RESET',
+      });
 
-      return badRequest([{ field: 'code', message: 'Code expired' }]);
+      return badRequest({ error: 'Código expirado' });
     }
 
-    await this.deleteVerificationCode.delete({ email, code });
+    await this.deleteVerificationCode.delete({
+      email,
+      code,
+      type: 'PASSWORD_RESET',
+    });
 
     const hashedPassword = await this.hasher.hash(password);
 

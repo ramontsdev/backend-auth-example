@@ -1,8 +1,10 @@
 import { VerificationCodeModel } from '@/domain/models/verificationCodeModel';
+import { VerificationCodeType } from '@/domain/usecases/verificationCode/CreateVerificationCode';
 
 export type VerificationCodeParams = {
   email: string;
-  code: string
+  code: string;
+  type: VerificationCodeType;
 }
 
 export interface IFindVerificationCode {

@@ -172,6 +172,41 @@ O servidor estará rodando em `http://localhost:4500`
 | ------ | --------- | ------------- | ------------ |
 | GET    | `/health` | Status da API | ❌           |
 
+## 🔐 Políticas de autenticação
+
+- **Tokens JWT**
+  - Gerados com expiração configurável via `JWT_EXPIRES_IN` (por padrão, `15m`).
+  - Assinados com a chave `JWT_SECRET`.
+
+- **Códigos de verificação**
+  - Código de verificação de e-mail:
+    - Tipo: `EMAIL_VERIFICATION`
+    - Expira após `emailVerificationCodeExpiresInMs` (30 minutos por padrão).
+  - Código de recuperação de senha:
+    - Tipo: `PASSWORD_RESET`
+    - Expira após `passwordResetCodeExpiresInMs` (15 minutos por padrão).
+
+- **Política de e-mail verificado**
+  - Usuários com `isEmailVerified = false` **não conseguem fazer login** (`/api/sign-in` retorna erro).
+
+## 📦 Formato de respostas HTTP
+
+- **Erros**:
+  - Sempre retornam no formato:
+    - `{ error: "mensagem de erro em PT-BR" }`
+  - Exemplos:
+    - `{ error: "Credenciais inválidas" }`
+    - `{ error: "E-mail não verificado" }`
+    - `{ error: "Código expirado" }`
+
+- **Sucesso / respostas informativas**:
+  - Mensagens simples:
+    - `{ message: "mensagem em PT-BR" }`
+  - Respostas com dados (por exemplo, login e `/me`):
+    - Retornam diretamente o payload de dados, por exemplo:
+      - `{ accessToken: "..." }`
+      - `{ id, name, email, ... }`
+
 ## 🧪 Testando a API
 
 ### Postman Collection
@@ -254,6 +289,7 @@ src/
 | `APP_NAME`              | Nome da aplicação         | `Auth Example`                             |
 | `APP_DOMAIN`            | Domínio da aplicação      | `example.com`                              |
 | `APP_EMAIL`             | Email da aplicação        | `info@example.com`                         |
+| `JWT_EXPIRES_IN`        | Expiração do access token | `15m`, `1h`                                |
 
 ## 🐳 Docker
 

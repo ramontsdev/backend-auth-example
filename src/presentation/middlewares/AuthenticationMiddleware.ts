@@ -14,21 +14,19 @@ export class AuthenticationMiddleware implements IMiddleware {
     const { authorization } = httpRequest.headers;
 
     if (!authorization) {
-      return unauthorized({
-        message: 'Unauthorized',
-      });
+      return unauthorized({ error: 'Não autorizado' });
     }
 
     const [bearer, token] = authorization.split(' ');
 
     if (bearer !== 'Bearer') {
-      return unauthorized({ message: 'Unauthorized' });
+      return unauthorized({ error: 'Não autorizado' });
     }
 
     const payload = await this.decrypter.decrypt(token) as { sub: string; };
 
     if (!payload) {
-      return unauthorized({ message: 'Unauthorized' });
+      return unauthorized({ error: 'Não autorizado' });
     }
 
     const { sub } = payload;
@@ -36,7 +34,7 @@ export class AuthenticationMiddleware implements IMiddleware {
     const user = await this.findUserById.findById(sub);
 
     if (!user) {
-      return unauthorized({ message: 'Unauthorized' });
+      return unauthorized({ error: 'Não autorizado' });
     }
 
     return ok({

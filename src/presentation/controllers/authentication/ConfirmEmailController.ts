@@ -21,7 +21,7 @@ export class ConfirmEmailController implements IController {
     if (!success) {
       return badRequest(error.issues.map(issue => ({
         field: issue.path.join('.'),
-        message: issue.message,
+        error: issue.message,
       })));
     }
 
@@ -30,26 +30,38 @@ export class ConfirmEmailController implements IController {
     const user = await this.findUserByEmail.findByEmail(email);
 
     if (!user) {
-      return badRequest([{ field: 'email', message: 'E-mail not found' }]);
+      return badRequest({ error: 'E-mail não encontrado' });
     }
 
     if (user.isEmailVerified) {
-      return conflict({ message: 'Email already verified' });
+      return conflict({ error: 'E-mail já verificado' });
     }
 
-    const verificationCode = await this.findVerificationCode.find({ email, code });
+    const verificationCode = await this.findVerificationCode.find({
+      email,
+      code,
+      type: 'EMAIL_VERIFICATION',
+    });
 
     if (!verificationCode) {
-      return badRequest([{ field: 'code', message: 'Invalid code' }]);
+      return badRequest({ error: 'Código inválido' });
     }
 
     if (verificationCode.expiresAt < new Date()) {
-      await this.deleteVerificationCode.delete({ email, code });
+      await this.deleteVerificationCode.delete({
+        email,
+        code,
+        type: 'EMAIL_VERIFICATION',
+      });
 
-      return badRequest([{ field: 'code', message: 'Code expired' }]);
+      return badRequest({ error: 'Código expirado' });
     }
 
-    await this.deleteVerificationCode.delete({ email, code });
+    await this.deleteVerificationCode.delete({
+      email,
+      code,
+      type: 'EMAIL_VERIFICATION',
+    });
 
     await this.updateUser.update({
       id: user.id,
